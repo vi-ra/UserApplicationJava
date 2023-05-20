@@ -45,8 +45,9 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 		List<TableColumnDetails> details = new ArrayList<>();
 
 		for (Object[] col : colsList) {
-			TableColumnDetails tableColumnDetails = new TableColumnDetails((Integer) col[0], (Integer) col[1],
-					(String) col[2], (String) col[3], (Integer) col[4], (Integer) col[5], (String) col[6]);
+			TableColumnDetails tableColumnDetails = new TableColumnDetails(
+					new TableColumnsId((Integer) col[0], (Integer) col[1]), (String) col[2], (String) col[3],
+					(Integer) col[4], (Integer) col[5], (String) col[6]);
 			details.add(tableColumnDetails);
 		}
 
@@ -65,7 +66,12 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 
 	@Override
 	public Integer getMaxTableNo() {
-		return tableRepo.getMaxTableNo();
+		return tableRepo.getMaxTableNo()==null?0:tableRepo.getMaxTableNo();
+	}
+
+	@Override
+	public void addDefaultRow(TableData tableData) {
+		dataRepo.save(tableData);
 	}
 
 }

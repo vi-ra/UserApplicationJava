@@ -11,6 +11,7 @@ public interface DynamicTableService {
 	public List<TableColumnDetails> getColumnDetails(Integer id);
 	public List<String[]> getTableData(Integer tableId);
 	public Integer getMaxTableNo();
+	public void addDefaultRow(TableData tableData);
 
 
 

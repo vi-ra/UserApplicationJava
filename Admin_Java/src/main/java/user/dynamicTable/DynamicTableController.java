@@ -25,19 +25,20 @@ public class DynamicTableController {
 	public void createNewTable(@RequestBody TableColumnDetailsBean details) {
 		TableDetails tableDetails = details.getTableDetails();
 		List<TableColumnDetails> colDetails = details.getColDetails();
-		int newTableId = tableService.getMaxTableNo() ==null ? 1:tableService.getMaxTableNo()+1;
+		int newTableId = tableService.getMaxTableNo() + 1;
 		if (tableDetails != null) {
 			tableDetails.setTableId(newTableId);
 			tableService.createTableDetails(tableDetails);
 		}
 		AtomicInteger i = new AtomicInteger(1);
 		for (TableColumnDetails col : colDetails) {
-			col.setTableId(newTableId);
-			col.setSerialNo(i.getAndIncrement());
+			col.setId(new TableColumnsId(newTableId, i.getAndIncrement()));
 		}
-		
-		if(colDetails.size()>0) {
+
+		if (colDetails.size() > 0) {
 			tableService.createColumnDetails(colDetails);
+			tableService.addDefaultRow(new TableData(new TableDataId(colDetails.get(0).getId().getTableId(),1),"","","","","","","","","","" ));
+
 		}
 	}
 
