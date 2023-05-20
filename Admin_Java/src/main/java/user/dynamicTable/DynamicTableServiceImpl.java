@@ -20,7 +20,7 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 	TableDataRepo dataRepo;
 
 	@Override
-	public void createTableDetails(TableDetails details) {
+	public void SaveTableDetails(TableDetails details) {
 		tableRepo.save(details);
 	}
 
@@ -73,5 +73,6 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 	public void addDefaultRow(TableData tableData) {
 		dataRepo.save(tableData);
 	}
+
 
 }

@@ -16,6 +16,7 @@ public class TableColumnDetails {
 	private Integer lowerLimit;
 	private Integer upperLimit;
 	private String uom;
+	private boolean activeFlag;
 
 	public TableColumnDetails() {
 	}
@@ -88,6 +89,15 @@ public class TableColumnDetails {
 
 	public void setUom(String uom) {
 		this.uom = uom;
+	}
+	
+	@Column(name = "active_flag")
+	public boolean isActiveFlag() {
+		return activeFlag;
+	}
+
+	public void setActiveFlag(boolean activeFlag) {
+		this.activeFlag = activeFlag;
 	}
 	
 	
