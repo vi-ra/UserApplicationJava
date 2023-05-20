@@ -25,7 +25,7 @@ public class DynamicTableController {
 	public void createNewTable(@RequestBody TableColumnDetailsBean details) {
 		TableDetails tableDetails = details.getTableDetails();
 		List<TableColumnDetails> colDetails = details.getColDetails();
-		int newTableId = tableService.getMaxTableNo()+1;
+		int newTableId = tableService.getMaxTableNo() ==null ? 1:tableService.getMaxTableNo()+1;
 		if (tableDetails != null) {
 			tableDetails.setTableId(newTableId);
 			tableService.createTableDetails(tableDetails);

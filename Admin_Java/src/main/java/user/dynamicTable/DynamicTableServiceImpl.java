@@ -12,10 +12,10 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 
 	@Autowired
 	TableRepo tableRepo;
-	
+
 	@Autowired
 	TableColumnRepo colRepo;
-	
+
 	@Autowired
 	TableDataRepo dataRepo;
 
@@ -31,7 +31,11 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 
 	@Override
 	public void createColumnDetails(List<TableColumnDetails> details) {
-		colRepo.saveAll(details);
+
+		for (TableColumnDetails col : details) {
+			colRepo.save(col);
+		}
+
 	}
 
 	@Override
@@ -61,7 +65,7 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 
 	@Override
 	public Integer getMaxTableNo() {
-		  return tableRepo.getMaxTableNo();
+		return tableRepo.getMaxTableNo();
 	}
 
 }
