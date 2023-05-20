@@ -2,7 +2,6 @@ package user.dynamicTable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import user.authentication.UserDetails;
 
 @CrossOrigin(origins = { "*" }, maxAge = 4800)
 @RestController
@@ -24,6 +20,26 @@ public class DynamicTableController {
 
 	@Autowired
 	DynamicTableService tableService;
+
+	@PostMapping("/CreateNewTable")
+	public void createNewTable(@RequestBody TableColumnDetailsBean details) {
+		TableDetails tableDetails = details.getTableDetails();
+		List<TableColumnDetails> colDetails = details.getColDetails();
+		int newTableId = tableService.getMaxTableNo()+1;
+		if (tableDetails != null) {
+			tableDetails.setTableId(newTableId);
+			tableService.createTableDetails(tableDetails);
+		}
+		AtomicInteger i = new AtomicInteger(1);
+		for (TableColumnDetails col : colDetails) {
+			col.setTableId(newTableId);
+			col.setSerialNo(i.getAndIncrement());
+		}
+		
+		if(colDetails.size()>0) {
+			tableService.createColumnDetails(colDetails);
+		}
+	}
 
 	@PostMapping("/CreateTableDetails")
 	public void createTableDetails(@RequestBody TableDetails details) {
@@ -67,8 +83,8 @@ public class DynamicTableController {
 		for (TableDetails table : tableDetails) {
 			Integer tableId = table.getTableId();
 			List<TableColumnDetails> columnDetails = tableService.getColumnDetails(tableId);
-			allTables.add(new TableColumnDetailsBean(tableId, table, columnDetails,
-					tableService.getTableData(tableId)));
+			allTables
+					.add(new TableColumnDetailsBean(tableId, table, columnDetails, tableService.getTableData(tableId)));
 		}
 		return allTables;
 	}

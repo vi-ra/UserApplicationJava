@@ -59,4 +59,9 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 		return dataRepo.findTableDataById(tableId);
 	}
 
+	@Override
+	public Integer getMaxTableNo() {
+		  return tableRepo.getMaxTableNo();
+	}
+
 }

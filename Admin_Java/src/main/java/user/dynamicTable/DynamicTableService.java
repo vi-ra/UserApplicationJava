@@ -10,6 +10,7 @@ public interface DynamicTableService {
 	public void createColumnDetails(List<TableColumnDetails> details);
 	public List<TableColumnDetails> getColumnDetails(Integer id);
 	public List<String[]> getTableData(Integer tableId);
+	public Integer getMaxTableNo();
 
 
 
