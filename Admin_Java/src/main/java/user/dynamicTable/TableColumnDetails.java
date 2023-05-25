@@ -22,13 +22,14 @@ public class TableColumnDetails {
 	}
 
 	public TableColumnDetails(TableColumnsId id, String columnName, String dataType,
-			Integer lowerLimit, Integer upperLimit, String uom) {
+			Integer lowerLimit, Integer upperLimit, String uom,boolean activeFlag) {
 		this.id = id;
 		this.columnName = columnName;
 		this.dataType = dataType;
 		this.lowerLimit = lowerLimit;
 		this.upperLimit = upperLimit;
 		this.uom = uom;
+		this.activeFlag = activeFlag;
 	}
 
 	public TableColumnDetails(TableColumnsId tableColumnsId) {

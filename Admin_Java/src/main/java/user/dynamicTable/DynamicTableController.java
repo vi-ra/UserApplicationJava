@@ -36,31 +36,28 @@ public class DynamicTableController {
 
 		if (colDetails.size() > 0) {
 			tableService.createColumnDetails(colDetails);
-			tableService.addDefaultRow(new TableData(new TableDataId(colDetails.get(0).getId().getTableId(),1),"","","","","","","","","","" ));
+			tableService.addDefaultRow(new TableData(new TableDataId(colDetails.get(0).getId().getTableId(), 1), "", "",
+					"", "", "", "", "", "", "", ""));
 		}
 	}
-
 
 	@PostMapping("/UpdateExistingTable")
 	public void updateNewTable(@RequestBody TableColumnDetailsBean details) {
 		TableDetails tableDetails = details.getTableDetails();
 		List<TableColumnDetails> colDetails = details.getColDetails();
-		AtomicInteger i = new  AtomicInteger(1)
-		
-		
+
 		tableService.SaveTableDetails(tableDetails);
-		tableService.createColumnDetails(colDetails);	
+		tableService.createColumnDetails(colDetails);
 	}
 
 	@GetMapping("/getAllTableData")
 	public List<TableColumnDetailsBean> getTableAndColumnDetailsById() {
 		List<TableDetails> tableDetails = tableService.getAllTables();
 		List<TableColumnDetailsBean> allTables = new ArrayList<>();
-		for (TableDetails table : tableDetails) {	
+		for (TableDetails table : tableDetails) {
 			Integer tableId = table.getTableId();
 			List<TableColumnDetails> columnDetails = tableService.getColumnDetails(tableId);
-			allTables
-					.add(new TableColumnDetailsBean(tableId, table, columnDetails, tableService.getTableData(tableId)));
+			allTables.add(new TableColumnDetailsBean(tableId, table, columnDetails, tableService.getTableData(tableId)));
 		}
 		return allTables;
 	}
