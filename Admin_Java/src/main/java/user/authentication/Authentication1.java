@@ -6,7 +6,7 @@ import java.util.Base64;
 import org.springframework.stereotype.Component;
 
 @Component
-public class Authentication {
+public class Authentication1 {
 //	public static void main(String[] args) throws Exception {
 //
 //		UserInfo dbCerd = new UserInfo("MES",
@@ -21,7 +21,7 @@ public class Authentication {
 		MessageDigest md = null;
 		String msgByte1 = "SHA-512";
 		String utfMsg = "UTF-8";
-		synchronized (Authentication.class) {
+		synchronized (Authentication1.class) {
 			try {
 				md = MessageDigest.getInstance(msgByte1);
 				md.update(password.getBytes(utfMsg));
@@ -35,7 +35,7 @@ public class Authentication {
 	}
 
 	public static boolean authenticate(String dbPass, String userPass) {
-		String enteredPassword = Authentication.encriptPassword(userPass);
+		String enteredPassword = Authentication1.encriptPassword(userPass);
 		return enteredPassword.equals(dbPass);
 	}
 }

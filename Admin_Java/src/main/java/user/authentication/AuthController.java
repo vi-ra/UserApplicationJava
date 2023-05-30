@@ -3,18 +3,22 @@ package user.authentication;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.zip.DataFormatException;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +29,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import user.security.AuthRequest;
+import user.security.AuthResponse;
+import user.security.JwtTokenUtil;
+
 @CrossOrigin(origins = { "*" }, maxAge = 4800)
 @RestController
 @RequestMapping("/auth")
@@ -33,10 +41,32 @@ public class AuthController {
 	@Autowired
 	AuthService authService;
 
+	@Autowired
+	AuthenticationManager authManager;
+	@Autowired
+	JwtTokenUtil jwtUtil;
+
+	@PostMapping("/Authenticate")
+	public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
+		try {
+			Authentication authentication = authManager.authenticate(
+					new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword()));
+
+			User user = (User) authentication.getPrincipal();
+			String accessToken = jwtUtil.generateAccessToken(user);
+			AuthResponse response = new AuthResponse(user.getUsername(), accessToken);
+
+			return ResponseEntity.ok().body(response);
+
+		} catch (BadCredentialsException ex) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+		}
+	}
+
 	@GetMapping("/GetActiveUsers")
-	List<UserDetails> getActiveUserDetails() {
-		List<UserDetails> activeUsers = authService.getActiveUserDetails();
-		for (UserDetails userDetails : activeUsers) {
+	List<User> getActiveUserDetails() {
+		List<User> activeUsers = authService.getActiveUserDetails();
+		for (User userDetails : activeUsers) {
 		}
 		return activeUsers;
 	}
@@ -44,7 +74,7 @@ public class AuthController {
 	@GetMapping("/GetAllUsers")
 	List<UserDetailsInfo> getAllUserDetails() throws IOException {
 		List<UserDetailsInfo> allUSers = new ArrayList<>();
-		for (UserDetails userDetails : authService.getAllUserDetails()) {
+		for (User userDetails : authService.getAllUserDetails()) {
 			UserProfilePic image = this.getImage(userDetails.getUserId());
 			UserDetailsInfo user = new UserDetailsInfo(userDetails, image != null ? image.getPicByte() : null);
 			allUSers.add(user);
@@ -53,44 +83,39 @@ public class AuthController {
 	}
 
 	@GetMapping("/GetUser/{id}")
-	Optional<UserDetails> getUserDetails(@PathVariable(value = "id") Integer id) {
+	Optional<User> getUserDetails(@PathVariable(value = "id") Integer id) {
 		return authService.getUserDetailsDetails(id);
 	}
 
 	@GetMapping("/GetUserByUsername/{username}")
 	UserDetailsInfo getUserDetailsByUsername(@PathVariable(value = "username") String username) throws IOException {
-		UserDetails user = authService.getUserDetailsDetailsByUsername(username);
+		User user = authService.getUserDetailsDetailsByUsername(username);
 		UserProfilePic image = this.getImage(user.getUserId());
 		UserDetailsInfo info = new UserDetailsInfo(user, image != null ? image.getPicByte() : null);
 		return info;
 	}
 
 	@PostMapping("/CreateUser")
-	UserDetails createUserDetails(@RequestBody UserDetails details) {
+	User createUserDetails(@RequestBody User details) {
 
-		UserDetails createUserDetails = authService.createUserDetails(details);
+		User createUserDetails = authService.createUserDetails(details);
 
 		return createUserDetails;
 	}
 
 	@PostMapping("/UpdateUser")
-	UserDetails updateUserDetails(@RequestBody UserDetails details) {
+	User updateUserDetails(@RequestBody User details) {
 		return authService.updateUserDetails(details);
 	}
 
 	@PostMapping("/enableDisableUser")
-	UserDetails enableDisableUser(@RequestBody UserDetails details) {
+	User enableDisableUser(@RequestBody User details) {
 		return authService.enableDisableUser(details);
 	}
 
 	@PostMapping("/UserDetails/{id}")
 	String deleteUserDetails(@PathVariable(value = "id") Integer id) {
 		return authService.deleteUserDetails(id);
-	}
-
-	@PostMapping("/Authenticate")
-	boolean authenticate(@RequestBody UserDetails details) {
-		return authService.authenticate(details.getUserName(), details.getPassword());
 	}
 
 	@Autowired

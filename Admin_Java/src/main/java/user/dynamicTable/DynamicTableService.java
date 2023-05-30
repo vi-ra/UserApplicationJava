@@ -9,7 +9,8 @@ public interface DynamicTableService {
 	public List<TableDetails> getAllTables();
 	public void createColumnDetails(List<TableColumnDetails> details);
 	public List<TableColumnDetails> getColumnDetails(Integer id);
-	public List<String[]> getTableData(Integer tableId);
+	public String  getTableData(Integer tableId);
 	public Integer getMaxTableNo();
 	public void addDefaultRow(TableData tableData);
+	public void saveOrUpdateTableData(int id , String json_Data);
 }

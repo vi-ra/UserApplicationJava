@@ -16,9 +16,9 @@ public class TableDataId implements java.io.Serializable {
 	public TableDataId() {
 	}
 
-	public TableDataId(int tableId, int rowNo) {
+	public TableDataId(int tableId) {
 		this.tableId = tableId;
-		this.rowNo = rowNo;
+		this.rowNo = 0;
 	}
 
 	@Column(name = "table_id", nullable = false)

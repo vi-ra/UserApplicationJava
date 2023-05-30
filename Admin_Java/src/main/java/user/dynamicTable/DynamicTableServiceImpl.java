@@ -49,9 +49,6 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 					new TableColumnsId((Integer) col[0], (Integer) col[1]), (String) col[2], (String) col[3],
 					(Integer) col[4], (Integer) col[5], (String) col[6], col[7].equals(0) ? false : true);
 
-//					new TableColumnDetails(
-//					new TableColumnsId((Integer) col[0], (Integer) col[1]), (String) col[2], (String) col[3],
-//					(Integer) col[4], (Integer) col[5],  null, ((Integer)col[6]) == 0 ?false:true);
 			details.add(tableColumnDetails);
 		}
 
@@ -64,7 +61,7 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 	}
 
 	@Override
-	public List<String[]> getTableData(Integer tableId) {
+	public String getTableData(Integer tableId) {
 		return dataRepo.findTableDataById(tableId);
 	}
 
@@ -76,6 +73,11 @@ public class DynamicTableServiceImpl implements DynamicTableService {
 	@Override
 	public void addDefaultRow(TableData tableData) {
 		dataRepo.save(tableData);
+	}
+
+	@Override
+	public void saveOrUpdateTableData(int id, String json_Data) {
+		dataRepo.save(new TableData(new TableDataId(id), json_Data));		
 	}
 
 }

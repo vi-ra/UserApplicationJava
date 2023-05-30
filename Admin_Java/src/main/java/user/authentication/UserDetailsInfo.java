@@ -17,12 +17,12 @@ public class UserDetailsInfo {
 	private byte[] picByte;
 	
 	
-	public UserDetailsInfo(UserDetails userDetails, byte[] picByte) {
+	public UserDetailsInfo(User userDetails, byte[] picByte) {
 		super();
 		this.userId = userDetails.getUserId();
 		this.firstName = userDetails.getFirstName();
 		this.lastName = userDetails.getLastName();
-		this.userName = userDetails.getUserName();
+		this.userName = userDetails.getUsername();
 		this.password = userDetails.getPassword();
 		this.designation = userDetails.getDesignation();
 		this.email = userDetails.getEmail();

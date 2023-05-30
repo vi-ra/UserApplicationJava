@@ -6,9 +6,6 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -18,37 +15,14 @@ import javax.persistence.Table;
 @Table(name = "table_data")
 public class TableData implements java.io.Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private TableDataId id;
-	private String col1Value;
-	private String col2Value;
-	private String col3Value;
-	private String col4Value;
-	private String col5Value;
-	private String col6Value;
-	private String col7Value;
-	private String col8Value;
-	private String col9Value;
-	private String col10Value;
-
-	public TableData() {
-	}
-
-	public TableData(TableDataId id, String col1Value, String col2Value, String col3Value, String col4Value,
-			String col5Value, String col6Value, String col7Value, String col8Value, String col9Value,
-			String col10Value) {
-		this.id = id;
-		this.col1Value = col1Value;
-		this.col2Value = col2Value;
-		this.col3Value = col3Value;
-		this.col4Value = col4Value;
-		this.col5Value = col5Value;
-		this.col6Value = col6Value;
-		this.col7Value = col7Value;
-		this.col8Value = col8Value;
-		this.col9Value = col9Value;
-		this.col10Value = col10Value;
-	}
-
+	private String data;
+	
+	
 	@EmbeddedId
 	@AttributeOverrides({ @AttributeOverride(name = "tableId", column = @Column(name = "table_id", nullable = false)),
 			@AttributeOverride(name = "rowNo", column = @Column(name = "row_no", nullable = false)) })
@@ -59,95 +33,32 @@ public class TableData implements java.io.Serializable {
 	public void setId(TableDataId id) {
 		this.id = id;
 	}
+	
+	public TableData(TableDataId id, String data) {
+		super();
+		this.id = id;
+		this.data = data;
+	}
+	
 
-	@Column(name = "col1_value")
-	public String getCol1Value() {
-		return this.col1Value;
+	public TableData() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public void setCol1Value(String col1Value) {
-		this.col1Value = col1Value;
+	@Column(name = "json_data")
+	public String getData() {
+		return data;
 	}
 
-	@Column(name = "col2_value")
-	public String getCol2Value() {
-		return this.col2Value;
+
+	public void setData(String data) {
+		this.data = data;
 	}
 
-	public void setCol2Value(String col2Value) {
-		this.col2Value = col2Value;
-	}
 
-	@Column(name = "col3_value")
-	public String getCol3Value() {
-		return this.col3Value;
-	}
+	
 
-	public void setCol3Value(String col3Value) {
-		this.col3Value = col3Value;
-	}
-
-	@Column(name = "col4_value")
-	public String getCol4Value() {
-		return this.col4Value;
-	}
-
-	public void setCol4Value(String col4Value) {
-		this.col4Value = col4Value;
-	}
-
-	@Column(name = "col5_value")
-	public String getCol5Value() {
-		return this.col5Value;
-	}
-
-	public void setCol5Value(String col5Value) {
-		this.col5Value = col5Value;
-	}
-
-	@Column(name = "col6_value")
-	public String getCol6Value() {
-		return this.col6Value;
-	}
-
-	public void setCol6Value(String col6Value) {
-		this.col6Value = col6Value;
-	}
-
-	@Column(name = "col7_value")
-	public String getCol7Value() {
-		return this.col7Value;
-	}
-
-	public void setCol7Value(String col7Value) {
-		this.col7Value = col7Value;
-	}
-
-	@Column(name = "col8_value")
-	public String getCol8Value() {
-		return this.col8Value;
-	}
-
-	public void setCol8Value(String col8Value) {
-		this.col8Value = col8Value;
-	}
-
-	@Column(name = "col9_value")
-	public String getCol9Value() {
-		return this.col9Value;
-	}
-
-	public void setCol9Value(String col9Value) {
-		this.col9Value = col9Value;
-	}
-
-	@Column(name = "col10_value")
-	public String getCol10Value() {
-		return this.col10Value;
-	}
-
-	public void setCol10Value(String col10Value) {
-		this.col10Value = col10Value;
-	}
+	
 
 }

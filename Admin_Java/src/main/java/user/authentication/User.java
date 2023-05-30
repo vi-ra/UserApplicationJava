@@ -1,5 +1,7 @@
 package user.authentication;
 
+import java.util.Collection;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,16 +10,21 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "user_details", catalog = "admin")
 @Data
 @NoArgsConstructor
-@Table(name = "user_details", catalog = "admin")
-public class UserDetails {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,24 +51,43 @@ public class UserDetails {
 
 	@Column(name = "contact_no")
 	private String contactNo;
-	
+
 	@Column(name = "active_Flag")
 	private boolean activeflag;
-	
-	
 
-	public UserDetails(Integer userId, String firstName, String lastName, String userName, String password,
-			String designation, String email, String contactNo, String imgtype, boolean activeflag) {
-		super();
-		this.userId = userId;
-		this.firstName = firstName;
-		this.lastName = lastName;
+	public User(String userName, String password) {
 		this.userName = userName;
 		this.password = password;
-		this.designation = designation;
-		this.email = email;
-		this.contactNo = contactNo;
-		this.activeflag = activeflag;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.userName;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
 	}
 
 }

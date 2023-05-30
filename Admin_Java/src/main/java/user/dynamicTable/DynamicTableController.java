@@ -1,9 +1,12 @@
 package user.dynamicTable;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +14,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 @CrossOrigin(origins = { "*" }, maxAge = 4800)
 @RestController
@@ -30,14 +36,24 @@ public class DynamicTableController {
 			tableService.SaveTableDetails(tableDetails);
 		}
 		AtomicInteger i = new AtomicInteger(1);
+
+		JSONObject obj = new JSONObject();
+		JSONArray jsonArray = new JSONArray();
+
 		for (TableColumnDetails col : colDetails) {
+			obj.put(col.getColumnName(), "");
 			col.setId(new TableColumnsId(newTableId, i.getAndIncrement()));
 		}
+		
+		jsonArray.add(obj);
 
-		if (colDetails.size() > 0) {
+
+		int noOfCols = colDetails.size();
+		if (noOfCols > 0) {
 			tableService.createColumnDetails(colDetails);
-			tableService.addDefaultRow(new TableData(new TableDataId(colDetails.get(0).getId().getTableId(), 1), "", "",
-					"", "", "", "", "", "", "", ""));
+			System.out.print(obj);
+			TableDataId id = new TableDataId(newTableId);
+			tableService.addDefaultRow(new TableData(id, jsonArray.toJSONString()));
 		}
 	}
 
@@ -57,8 +73,32 @@ public class DynamicTableController {
 		for (TableDetails table : tableDetails) {
 			Integer tableId = table.getTableId();
 			List<TableColumnDetails> columnDetails = tableService.getColumnDetails(tableId);
-			allTables.add(new TableColumnDetailsBean(tableId, table, columnDetails, tableService.getTableData(tableId)));
+			try {
+				allTables.add(new TableColumnDetailsBean(tableId, table, columnDetails, tableService.getTableData(tableId)));
+			} catch (JsonMappingException e) {
+				e.printStackTrace();
+			} catch (JsonProcessingException e) {
+				e.printStackTrace();
+			}
 		}
 		return allTables;
 	}
+
+	@PostMapping("/saveRowData")
+	public void createNewTable(@RequestBody Object details) {
+		LinkedHashMap<Object, Object> ob = (LinkedHashMap<Object, Object>) details;
+		Object object = ob.get("json_data");
+		System.out.println(object);
+//		TableData data = new TableData(new TableDataId(1, 1), details);
+//		tableService.addDefaultRow(details);
+	}
+	
+	@PostMapping("/saveTableData")
+	public void saveTableData(@RequestBody Object details) {
+		LinkedHashMap<Object, Object> ob = (LinkedHashMap<Object, Object>) details;
+		String json_data = ob.get("json_data").toString().replace(",\"editflag\":true", ",\"editflag\":false");
+		int id = Integer.parseInt(ob.get("table_id").toString());
+		tableService.saveOrUpdateTableData(id, json_data);
+	}
+
 }

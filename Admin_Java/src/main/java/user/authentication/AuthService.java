@@ -8,22 +8,22 @@ import org.springframework.stereotype.Service;
 
 public interface AuthService {
 
-	List<UserDetails> getAllUserDetails();
+	List<User> getAllUserDetails();
 
-	Optional<UserDetails> getUserDetailsDetails(Integer id);
+	Optional<User> getUserDetailsDetails(Integer id);
 
-	UserDetails createUserDetails(UserDetails details);
+	User createUserDetails(User details);
 
 	String deleteUserDetails(Integer id);
 
-	UserDetails updateUserDetails(UserDetails details);
+	User updateUserDetails(User details);
 
-	List<UserDetails> getActiveUserDetails();
+	List<User> getActiveUserDetails();
 
 	boolean authenticate(String userName, String password);
 
-	UserDetails getUserDetailsDetailsByUsername(String username);
+	User getUserDetailsDetailsByUsername(String username);
 
-	UserDetails enableDisableUser(UserDetails details);
+	User enableDisableUser(User details);
 
 }
