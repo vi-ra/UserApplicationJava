@@ -48,9 +48,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable();
 		http.authorizeRequests()
-//		.antMatchers("/auth/Authenticate").permitAll()
 		.anyRequest().permitAll();
-//		.authenticated();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.exceptionHandling().authenticationEntryPoint((request, response, ex) -> {
 			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());

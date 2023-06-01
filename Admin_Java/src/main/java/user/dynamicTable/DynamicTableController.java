@@ -96,7 +96,7 @@ public class DynamicTableController {
 	@PostMapping("/saveTableData")
 	public void saveTableData(@RequestBody Object details) {
 		LinkedHashMap<Object, Object> ob = (LinkedHashMap<Object, Object>) details;
-		String json_data = ob.get("json_data").toString().replace(",\"editflag\":true", ",\"editflag\":false");
+		String json_data = ob.get("json_data").toString().replace(",\"editflag\":true", "");
 		int id = Integer.parseInt(ob.get("table_id").toString());
 		tableService.saveOrUpdateTableData(id, json_data);
 	}
