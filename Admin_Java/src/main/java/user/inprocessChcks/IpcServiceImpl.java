@@ -11,6 +11,9 @@ public class IpcServiceImpl implements IpcService {
 
 	@Autowired
 	IpcRepo ipcRepo;
+	
+	@Autowired
+	StartupRecordRepo startupRecordRepo;
 
 	@Override
 	public void saveOrUpdateTableData(int id, String json_data) {
@@ -22,6 +25,16 @@ public class IpcServiceImpl implements IpcService {
 	@Override
 	public String getProductParameters(int i) {
 		return ipcRepo.findJsonById(i);	
+	}
+
+	@Override
+	public void CreateOrUpdateStartupData(StartupRecordData data) {
+		startupRecordRepo.save(data);		
+	}
+
+	@Override
+	public String getStartupStatistics(Integer ipcId, Integer sampleId,String section) {
+		return startupRecordRepo.getStartupStatisticsData(ipcId, sampleId,section);
 	}
 
 }
